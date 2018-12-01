@@ -1,5 +1,5 @@
 # Base container image
-FROM golang:1.8-alpine
+FROM golang:1.11-alpine
 # Using Alpine's apk tool, install git which
 # is used by Go to download packages
 RUN apk --no-cache -U add git
