@@ -1,20 +1,18 @@
 # Base container image
-FROM golang:1.11-alpine AS builder
+FROM golang:1.8-alpine
 # Using Alpine's apk tool, install git which
 # is used by Go to download packages
 RUN apk --no-cache -U add git
 # Install package manager
 RUN go get -u github.com/kardianos/govendor
+
 # Copy app files into container
 WORKDIR /go/src/app
 COPY . .
+expose 3000
 # Install dependencies
 RUN govendor sync
 # Build the app
-RUN govendor build -o /go/src/app/GUC_Comments
-# Smallest container image
-FROM scratch
-# Copy built executable from base image to here
-COPY --from=builder /go/src/app/GUC_Comments /
+RUN govendor build -o /go/src/app/myapp
 # Run the app
-CMD [ "/GUC_Comments" ]
+CMD [ "/go/src/app/myapp" ]

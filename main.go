@@ -1,13 +1,13 @@
 package main
 
 import (
+	// 	"fmt"
+	// 	"net/http"
 	"database/sql"
 	"log"
 
 	_ "github.com/lib/pq"
 )
-
-//import "net/http"
 
 func main() {
 	db, err := sql.Open("postgres",
@@ -22,24 +22,24 @@ func main() {
 	}
 
 	log.Print("connected")
+	// fmt.Print("hiii sobky")
+	// http.HandleFunc("/", defaultHandler) // default directory
+	// http.HandleFunc("/MICRO", microHandler)
+	// http.HandleFunc("/ANALYSIS", analysisHandler)
+	// http.HandleFunc("/ANDVANCED", advancedHandler)
+	// http.ListenAndServe(":3000", nil)
 
-	/*	http.HandleFunc("/", defaultHandler) // default directory
-		http.HandleFunc("/MICRO", microHandler)
-		http.HandleFunc("/ANALYSIS", analysisHandler)
-		http.HandleFunc("/ANDVANCED", advancedHandler)
-		http.ListenAndServe(":3000", nil)*/
-
 }
 
-/*func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, Web!")
-}
-func microHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, micro!")
-}
-func analysisHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, analysis!")
-}
-func advancedHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, advanced!")*/
-//}
+// func defaultHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, Web!")
+// }
+// func microHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, micro!")
+// }
+// func analysisHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, analysis!")
+// }
+// func advancedHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, advanced!")
+// }
