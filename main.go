@@ -1,16 +1,14 @@
 package main
 
 import (
-
 	"database/sql"
 	"fmt"
 	"log"
-	_ "github.com/lib/pq"
 	"reflect"
+
 	fb "github.com/huandu/facebook"
+	_ "github.com/lib/pq"
 )
-
-
 
 // var (
 // 	dbname     = os.Getenv("DATABASE_NAME")
@@ -24,9 +22,8 @@ const (
 	dbpassword = "secret"
 	dbuser     = "root"
 	dbhost     = "db"
-  ac = "EAAa6VkKVZBVUBAKZAZBpHTSn1nVG6ZBRLOyVWrAFPmBe7AJWr6RAH64fq7kaMHifjjTx8bCoIelxC3860gLRO7AozL1vZB3vPlZAyNzxmCS7Ln4ehhKgbOBm8LOyRx7ZB1UOlIHpddQZCZAir6BwC1JR1DbiUg5JNrH6HmdQYQbv5wTFGroNt9mSlW1SRzXCz1bEZD"
+	ac         = "EAAFDrTDhvyMBAEt2GZAyMW9xPsLNnhz8ZAXh8ehZBTU6b5ug8ciAZBSulKOEDDbS2GtrokaGIKyOZAagiNCvRrZCl1nXaR6xtZBmGoXeSOISqihq7sDM3TZBj6hC2ZCEpwP3In3jo2ZAj5xlPNgMbYTgNWProADC3C2XNWe1FH7egJKwZDZD"
 )
-
 
 func main() {
 	q := ` SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
@@ -34,14 +31,14 @@ func main() {
 				(
 					CourseId SERIAL PRIMARY KEY,
 					CourseName VARCHAR(30)
-					
+
 				);
-	
+
 				CREATE TABLE Comments
 				(
-					CourseId INTEGER REFERENCES Courses(CourseId), 
+					CourseId INTEGER REFERENCES Courses(CourseId),
 					Comment VARCHAR(50)
-				
+
 				);`
 	dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbhost, dbuser, dbpassword, dbname)
@@ -58,7 +55,6 @@ func main() {
 	}
 
 	log.Print("connected")
-
 
 	Result, err := db.Exec(qcreate)
 	if (err) != nil {
@@ -82,8 +78,7 @@ func main() {
 	}
 	log.Printf("hey again")
 
-  
-  res, _ := fb.Get("582313518881669_582751342171220/comments", fb.Params{
+	res, _ := fb.Get("582313518881669_582751342171220/comments", fb.Params{
 		"fields":       "message",
 		"access_token": ac,
 	})
@@ -97,7 +92,7 @@ func main() {
 		fmt.Println(msg["message"])
 	}
 
-	fmt.Println("")
+	fmt.Println()
 
 	res2, _ := fb.Get("582313518881669_582750698837951/comments", fb.Params{
 		"fields":       "message",
@@ -111,7 +106,7 @@ func main() {
 
 		fmt.Println(msg["message"])
 	}
-
+	fmt.Println()
 	res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
 		"fields":       "message",
 		"access_token": ac})
@@ -137,7 +132,6 @@ func main() {
 	// http.HandleFunc("/ANDVANCED", advancedHandler)
 	// http.ListenAndServe(":3000", nil)
 
-
 }
 
 // func defaultHandler(w http.ResponseWriter, r *http.Request) {
@@ -152,8 +146,3 @@ func main() {
 // func advancedHandler(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Fprintln(w, "Hello, advanced!")
 // }
-
-
-
-
-
