@@ -1,32 +1,31 @@
 package main
 
 import (
-
 	"database/sql"
 	"fmt"
+
 	"log"
+	//"os"
+	//"reflect"
+
+	//	fb "github.com/huandu/facebook"
 	_ "github.com/lib/pq"
-	"reflect"
-	fb "github.com/huandu/facebook"
 )
 
-
-
-// var (
+var (
 // 	dbname     = os.Getenv("DATABASE_NAME")
 // 	dbpassword = os.Getenv("DATABASE_PASSWORD")
 // 	dbuser     = os.Getenv("DATABASE_USER")
 // 	dbhost     = os.Getenv("DATABASE_HOST")
-// )
+//	ac = os.Getenv("ACCESS_TOKEN")
+)
 
 const (
 	dbname     = "GUC_Comments"
 	dbpassword = "secret"
 	dbuser     = "root"
 	dbhost     = "db"
-  ac = "EAAa6VkKVZBVUBAKZAZBpHTSn1nVG6ZBRLOyVWrAFPmBe7AJWr6RAH64fq7kaMHifjjTx8bCoIelxC3860gLRO7AozL1vZB3vPlZAyNzxmCS7Ln4ehhKgbOBm8LOyRx7ZB1UOlIHpddQZCZAir6BwC1JR1DbiUg5JNrH6HmdQYQbv5wTFGroNt9mSlW1SRzXCz1bEZD"
 )
-
 
 func main() {
 	q := ` SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
@@ -34,14 +33,14 @@ func main() {
 				(
 					CourseId SERIAL PRIMARY KEY,
 					CourseName VARCHAR(30)
-					
+
 				);
-	
+
 				CREATE TABLE Comments
 				(
-					CourseId INTEGER REFERENCES Courses(CourseId), 
+					CourseId INTEGER REFERENCES Courses(CourseId),
 					Comment VARCHAR(50)
-				
+
 				);`
 	dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbhost, dbuser, dbpassword, dbname)
@@ -58,7 +57,6 @@ func main() {
 	}
 
 	log.Print("connected")
-
 
 	Result, err := db.Exec(qcreate)
 	if (err) != nil {
@@ -82,48 +80,51 @@ func main() {
 	}
 	log.Printf("hey again")
 
-  
-  res, _ := fb.Get("582313518881669_582751342171220/comments", fb.Params{
-		"fields":       "message",
-		"access_token": ac,
-	})
+	// res, err := fb.Get("582313518881669_582751342171220/comments", fb.Params{
+	// 	"fields":       "message",
+	// 	"access_token": ac,
+	// })
 
-	s, _ := res["data"].([]interface{})
+	// if (err) != nil {
+	// 	log.Fatal(err)
 
-	for i := 0; i < reflect.ValueOf(s).Len(); i++ {
+	// }
+	// s, _ := res["data"].([]interface{})
 
-		msg := s[i].(map[string]interface{})
+	// for i := 0; i < reflect.ValueOf(s).Len(); i++ {
 
-		fmt.Println(msg["message"])
-	}
+	// 	msg := s[i].(map[string]interface{})
 
-	fmt.Println("")
+	// 	fmt.Println(msg["message"])
+	// }
 
-	res2, _ := fb.Get("582313518881669_582750698837951/comments", fb.Params{
-		"fields":       "message",
-		"access_token": ac})
+	// fmt.Println("")
 
-	r, _ := res2["data"].([]interface{})
+	// res2, _ := fb.Get("582313518881669_582750698837951/comments", fb.Params{
+	// 	"fields":       "message",
+	// 	"access_token": ac})
 
-	for i := 0; i < reflect.ValueOf(r).Len(); i++ {
+	// r, _ := res2["data"].([]interface{})
 
-		msg := r[i].(map[string]interface{})
+	// for i := 0; i < reflect.ValueOf(r).Len(); i++ {
 
-		fmt.Println(msg["message"])
-	}
+	// 	msg := r[i].(map[string]interface{})
 
-	res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
-		"fields":       "message",
-		"access_token": ac})
+	// 	fmt.Println(msg["message"])
+	// }
 
-	v, _ := res3["data"].([]interface{})
+	// res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
+	// 	"fields":       "message",
+	// 	"access_token": ac})
 
-	for i := 0; i < reflect.ValueOf(v).Len(); i++ {
+	// v, _ := res3["data"].([]interface{})
 
-		msg := v[i].(map[string]interface{})
+	// for i := 0; i < reflect.ValueOf(v).Len(); i++ {
 
-		fmt.Println(msg["message"])
-	}
+	// 	msg := v[i].(map[string]interface{})
+
+	// 	fmt.Println(msg["message"])
+	// }
 	/*	http.HandleFunc("/", defaultHandler) // default directory
 		http.HandleFunc("/MICRO", microHandler)
 		http.HandleFunc("/ANALYSIS", analysisHandler)
@@ -136,7 +137,6 @@ func main() {
 	// http.HandleFunc("/ANALYSIS", analysisHandler)
 	// http.HandleFunc("/ANDVANCED", advancedHandler)
 	// http.ListenAndServe(":3000", nil)
-
 
 }
 
@@ -152,8 +152,3 @@ func main() {
 // func advancedHandler(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Fprintln(w, "Hello, advanced!")
 // }
-
-
-
-
-
