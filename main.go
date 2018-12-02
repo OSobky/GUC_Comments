@@ -1,14 +1,17 @@
 package main
 
 import (
+	//"database/sql"
 	"fmt"
+	"log"
 	"net/http"
-	"os"
+	"reflect"
 
 	"html/template"
-
 	//"os"
 	//"reflect"
+
+	fb "github.com/huandu/facebook"
 
 	_ "github.com/lib/pq"
 )
@@ -16,6 +19,7 @@ import (
 type guccomments struct {
 	Title    string
 	Comments string
+	Range    int
 }
 
 // var (
@@ -25,19 +29,19 @@ type guccomments struct {
 // 	dbhost     = os.Getenv("DATABASE_HOST")
 //
 //)
-var ac = os.Getenv("ACCESS_TOKEN")
 
-/*const (
+const (
 	dbname     = "GUC_Comments"
 	dbpassword = "secret"
 	dbuser     = "root"
 	dbhost     = "db"
+	ac         = "EAAFDrTDhvyMBAEt2GZAyMW9xPsLNnhz8ZAXh8ehZBTU6b5ug8ciAZBSulKOEDDbS2GtrokaGIKyOZAagiNCvRrZCl1nXaR6xtZBmGoXeSOISqihq7sDM3TZBj6hC2ZCEpwP3In3jo2ZAj5xlPNgMbYTgNWProADC3C2XNWe1FH7egJKwZDZD"
 )
-*/
+
 func main() {
-	/*
-		q := ` SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
-		qcreate := `CREATE TABLE Courses
+
+	/*q := ` SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
+	qcreate := `CREATE TABLE Courses
 					(
 						CourseId SERIAL PRIMARY KEY,
 						CourseName VARCHAR(30)
@@ -50,89 +54,89 @@ func main() {
 						Comment VARCHAR(50)
 
 					);`
-		dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-			dbhost, dbuser, dbpassword, dbname)
+	dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbhost, dbuser, dbpassword, dbname)
 
-		db, err := sql.Open("postgres",
-			dbInfo)
-		if err != nil {
-			log.Fatal("Error: The data source arguments are not valid")
-		}
+	db, err := sql.Open("postgres",
+		dbInfo)
+	if err != nil {
+		log.Fatal("Error: The data source arguments are not valid")
+	}
 
-		err = db.Ping()
-		if err != nil {
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print("connected")
+
+	Result, err := db.Exec(qcreate)
+	if (err) != nil {
+		log.Fatal(err)
+	}
+
+	log.Print(Result)
+
+	rows, err := db.Query(q)
+	if (err) != nil {
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		var (
+			tableName string
+		)
+		if err := rows.Scan(&tableName); err != nil {
 			log.Fatal(err)
 		}
+		log.Printf("Table name is %s", tableName)
+	}
+	log.Printf("hey again")
+	*/
+	res, err := fb.Get("582313518881669_582751342171220/comments", fb.Params{
+		"fields":       "message",
+		"access_token": ac,
+	})
 
-		log.Print("connected")
+	if (err) != nil {
+		log.Fatal(err)
 
-		Result, err := db.Exec(qcreate)
-		if (err) != nil {
-			log.Fatal(err)
-		}
+	}
+	s, _ := res["data"].([]interface{})
 
-		log.Print(Result)
+	for i := 0; i < reflect.ValueOf(s).Len(); i++ {
 
-		rows, err := db.Query(q)
-		if (err) != nil {
-			log.Fatal(err)
-		}
-		for rows.Next() {
-			var (
-				tableName string
-			)
-			if err := rows.Scan(&tableName); err != nil {
-				log.Fatal(err)
-			}
-			log.Printf("Table name is %s", tableName)
-		}
-		log.Printf("hey again")*/
-	/*
-		res, err := fb.Get("582313518881669_582751342171220/comments", fb.Params{
-			"fields":       "message",
-			"access_token": ac,
-		})
+		msg := s[i].(map[string]interface{})
 
-		if (err) != nil {
-			log.Fatal(err)
+		fmt.Println(msg["message"])
+	}
 
-		}
-		s, _ := res["data"].([]interface{})
+	fmt.Println("")
 
-		for i := 0; i < reflect.ValueOf(s).Len(); i++ {
+	res2, _ := fb.Get("582313518881669_582750698837951/comments", fb.Params{
+		"fields":       "message",
+		"access_token": ac})
 
-			msg := s[i].(map[string]interface{})
+	r, _ := res2["data"].([]interface{})
 
-			fmt.Println(msg["message"])
-		}
+	for i := 0; i < reflect.ValueOf(r).Len(); i++ {
 
-		fmt.Println("")
+		msg := r[i].(map[string]interface{})
 
-		res2, _ := fb.Get("582313518881669_582750698837951/comments", fb.Params{
-			"fields":       "message",
-			"access_token": ac})
+		fmt.Println(msg["message"])
+	}
 
-		r, _ := res2["data"].([]interface{})
+	res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
+		"fields":       "message",
+		"access_token": ac})
 
-		for i := 0; i < reflect.ValueOf(r).Len(); i++ {
+	v, _ := res3["data"].([]interface{})
 
-			msg := r[i].(map[string]interface{})
+	for i := 0; i < reflect.ValueOf(v).Len(); i++ {
 
-			fmt.Println(msg["message"])
-		}
+		msg := v[i].(map[string]interface{})
 
-		res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
-			"fields":       "message",
-			"access_token": ac})
-
-		v, _ := res3["data"].([]interface{})
-
-		for i := 0; i < reflect.ValueOf(v).Len(); i++ {
-
-			msg := v[i].(map[string]interface{})
-
-			fmt.Println(msg["message"])
-		}*/
+		fmt.Println(msg["message"])
+	}
 
 	fmt.Print("hiii sobky")
 	http.HandleFunc("/", defaultHandler) // default directory
@@ -144,7 +148,9 @@ func main() {
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "hello world")
+	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	t, _ := template.ParseFiles("guc_comments.html")
+	t.Execute(w, p)
 }
 func microHandler(w http.ResponseWriter, r *http.Request) {
 	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
@@ -152,8 +158,12 @@ func microHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, p)
 }
 func analysisHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, analysis!")
+	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	t, _ := template.ParseFiles("guc_comments.html")
+	t.Execute(w, p)
 }
 func advancedHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, advanced!")
+	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	t, _ := template.ParseFiles("guc_comments.html")
+	t.Execute(w, p)
 }
