@@ -1,59 +1,62 @@
 package main
 
 import (
-	//"database/sql"
+	"database/sql"
 	"fmt"
+
 	"log"
+
 	"net/http"
-	"reflect"
+	"os"
 
 	"html/template"
-	//"os"
-	//"reflect"
+	"reflect"
 
 	fb "github.com/huandu/facebook"
-
 	_ "github.com/lib/pq"
 )
 
-type guccomments struct {
+type comment struct {
 	Title    string
-	Comments string
-	Range    int
+	Reviews  string
+	Courses  []string
+	Comments []string
 }
 
-// var (
-// 	dbname     = os.Getenv("DATABASE_NAME")
-// 	dbpassword = os.Getenv("DATABASE_PASSWORD")
-// 	dbuser     = os.Getenv("DATABASE_USER")
-// 	dbhost     = os.Getenv("DATABASE_HOST")
-//
-//)
-
-const (
-	dbname     = "GUC_Comments"
-	dbpassword = "secret"
-	dbuser     = "root"
-	dbhost     = "db"
-	ac         = "EAAFDrTDhvyMBAEt2GZAyMW9xPsLNnhz8ZAXh8ehZBTU6b5ug8ciAZBSulKOEDDbS2GtrokaGIKyOZAagiNCvRrZCl1nXaR6xtZBmGoXeSOISqihq7sDM3TZBj6hC2ZCEpwP3In3jo2ZAj5xlPNgMbYTgNWProADC3C2XNWe1FH7egJKwZDZD"
+var (
+	dbname     = os.Getenv("DATABASE_NAME")
+	dbpassword = os.Getenv("DATABASE_PASSWORD")
+	dbuser     = os.Getenv("DATABASE_USER")
+	dbhost     = os.Getenv("DATABASE_HOST")
+	ac         = os.Getenv("ACCESS_TOKEN")
+	db         *sql.DB
 )
 
 func main() {
+	q := ` SELECT table_name 
+			FROM information_schema.tables
+			 WHERE table_schema='public' AND table_type='BASE TABLE'`
+	q1 := `SELECT CourseId,CourseName
+			FROM Courses `
 
-	/*q := ` SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
 	qcreate := `CREATE TABLE Courses
-					(
-						CourseId SERIAL PRIMARY KEY,
-						CourseName VARCHAR(30)
+				(
+					CourseId SERIAL PRIMARY KEY,
+					CourseName TEXT
 
-					);
+				);
 
-					CREATE TABLE Comments
-					(
-						CourseId INTEGER REFERENCES Courses(CourseId),
-						Comment VARCHAR(50)
+				CREATE TABLE Comments
+				(
+					CourseId INTEGER REFERENCES Courses(CourseId),
+					Comment TEXT
 
-					);`
+				);`
+	qinsertCourses := `INSERT INTO Courses(CourseId ,CourseName ) VALUES
+						(DEFAULT,'CSEN 702 Microprocessors'),
+						(DEFAULT,'CSEN 703 Analysis and Design of Algorithms'),
+						(DEFAULT,'CSEN 704 Advanced computer lab');`
+
 	dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbhost, dbuser, dbpassword, dbname)
 
@@ -70,12 +73,13 @@ func main() {
 
 	log.Print("connected")
 
-	Result, err := db.Exec(qcreate)
-	if (err) != nil {
+	db.Exec(qcreate)
+
+	Result, err := db.Exec(qinsertCourses)
+	if err != nil {
 		log.Fatal(err)
 	}
-
-	log.Print(Result)
+	fmt.Println(Result)
 
 	rows, err := db.Query(q)
 	if (err) != nil {
@@ -90,8 +94,20 @@ func main() {
 		}
 		log.Printf("Table name is %s", tableName)
 	}
+	rows2, err := db.Query(q1)
+
+	for rows2.Next() {
+		var (
+			courseName string
+			courseid   int
+		)
+		if err := rows2.Scan(&courseid, &courseName); err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("course name is %s and id is %d", courseName, courseid)
+	}
 	log.Printf("hey again")
-	*/
+
 	res, err := fb.Get("582313518881669_582751342171220/comments", fb.Params{
 		"fields":       "message",
 		"access_token": ac,
@@ -101,13 +117,22 @@ func main() {
 		log.Fatal(err)
 
 	}
+
 	s, _ := res["data"].([]interface{})
 
 	for i := 0; i < reflect.ValueOf(s).Len(); i++ {
 
 		msg := s[i].(map[string]interface{})
 
-		fmt.Println(msg["message"])
+		qinsertcomment := fmt.Sprintf(`INSERT INTO Comments(CourseId, Comment) VALUES (1 ,'%s')`,
+			msg["message"])
+
+		Result, err := db.Exec(qinsertcomment)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(Result)
+		fmt.Println(qinsertcomment)
 	}
 
 	fmt.Println("")
@@ -122,8 +147,18 @@ func main() {
 
 		msg := r[i].(map[string]interface{})
 
-		fmt.Println(msg["message"])
+		qinsertcomment := fmt.Sprintf(`INSERT INTO Comments(CourseId, Comment) VALUES (2 ,'%s')`,
+			msg["message"])
+
+		Result, err := db.Exec(qinsertcomment)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(Result)
+		fmt.Println(qinsertcomment)
 	}
+
+	fmt.Println("")
 
 	res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
 		"fields":       "message",
@@ -135,35 +170,98 @@ func main() {
 
 		msg := v[i].(map[string]interface{})
 
-		fmt.Println(msg["message"])
+		qinsertcomment := fmt.Sprintf(`INSERT INTO Comments(CourseId, Comment) VALUES (3 ,'%s')`,
+			msg["message"])
+
+		Result, err := db.Exec(qinsertcomment)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(Result)
+		fmt.Println(qinsertcomment)
 	}
+	fmt.Println("3ash ya sobkyy")
 
 	fmt.Print("hiii sobky")
 	http.HandleFunc("/", defaultHandler) // default directory
 	http.HandleFunc("/MICRO", microHandler)
 	http.HandleFunc("/ANALYSIS", analysisHandler)
 	http.HandleFunc("/ANDVANCED", advancedHandler)
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":8080", nil)
 
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	courses2 := gettingCourseFromCourses()
+	comments2 = 
+	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Courses: courses2, Comments: []string{}}
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, p)
 }
+
 func microHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Comments: []string{"asdasds", "asdasdas", "asdasd"}}
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, p)
 }
 func analysisHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Comments: []string{"asdasds", "asdasdas", "asdasd"}}
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, p)
 }
 func advancedHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Comments: "reviews"}
+	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Comments: []string{"asdasds", "asdasdas", "asdasd"}}
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, p)
+}
+
+func gettingCommentsFromCourse(CourseName string) []string {
+	var comments []string
+	q := fmt.Sprintf(`SELECT Comment
+			 FROM Comments  
+			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId 
+			 WHERE Courses.CourseName = '%s' `, CourseName)
+	rows, err := db.Query(q)
+
+	if (err) != nil {
+		log.Fatal(err)
+	}
+	i := 0
+	for rows.Next() {
+		var (
+			comment string
+		)
+		if err := rows.Scan(&comment); err != nil {
+			log.Fatal(err)
+		}
+		comments[i] = comment
+		i++
+
+	}
+	return comments
+}
+
+func gettingCourseFromCourses() []string {
+	var courses []string
+	q := fmt.Sprintf(`SELECT Course
+			 		FROM Courses `)
+
+	rows, err := db.Query(q)
+
+	if (err) != nil {
+		log.Fatal(err)
+	}
+	i := 0
+	for rows.Next() {
+		var (
+			course string
+		)
+		if err := rows.Scan(&course); err != nil {
+			log.Fatal(err)
+		}
+		courses[i] = course
+		i++
+
+	}
+	return courses
 }
