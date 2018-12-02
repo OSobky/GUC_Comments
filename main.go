@@ -16,11 +16,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type comment struct {
-	Title    string
-	Reviews  string
-	Courses  []string
-	Comments []string
+type guccomments struct {
+	Comments string
 }
 
 var (
@@ -30,7 +27,25 @@ var (
 	dbhost     = os.Getenv("DATABASE_HOST")
 	ac         = os.Getenv("ACCESS_TOKEN")
 	db         *sql.DB
+	tpl        *template.Template
 )
+
+func init() {
+	var err error
+	dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbhost, dbuser, dbpassword, dbname)
+	db, err = sql.Open("postgres", dbInfo)
+	if err != nil {
+		panic(err)
+	}
+
+	if err = db.Ping(); err != nil {
+		panic(err)
+	}
+	fmt.Println("You connected to your database.")
+
+	tpl = template.Must(template.ParseGlob("guc_comments.html"))
+}
 
 func main() {
 	q := ` SELECT table_name 
@@ -56,22 +71,6 @@ func main() {
 						(DEFAULT,'CSEN 702 Microprocessors'),
 						(DEFAULT,'CSEN 703 Analysis and Design of Algorithms'),
 						(DEFAULT,'CSEN 704 Advanced computer lab');`
-
-	dbInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-		dbhost, dbuser, dbpassword, dbname)
-
-	db, err := sql.Open("postgres",
-		dbInfo)
-	if err != nil {
-		log.Fatal("Error: The data source arguments are not valid")
-	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Print("connected")
 
 	db.Exec(qcreate)
 
@@ -180,88 +179,171 @@ func main() {
 		fmt.Println(Result)
 		fmt.Println(qinsertcomment)
 	}
+
+	q222 := `SELECT Comment
+	FROM Comments  
+	INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId 
+	WHERE Courses.CourseName = 'CSEN 702 Microprocessors' `
+
+	rows5555, err := db.Query(q222)
+
+	if (err) != nil {
+		log.Fatal(err)
+	}
+	defer rows5555.Close()
+	gucs := make([]guccomments, 0)
+	for rows5555.Next() {
+		guc := guccomments{}
+		if err := rows5555.Scan(&guc.Comments); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(guc.Comments)
+		gucs = append(gucs, guc)
+
+	}
 	fmt.Println("3ash ya sobkyy")
 
 	fmt.Print("hiii sobky")
 	http.HandleFunc("/", defaultHandler) // default directory
 	http.HandleFunc("/MICRO", microHandler)
 	http.HandleFunc("/ANALYSIS", analysisHandler)
-	http.HandleFunc("/ANDVANCED", advancedHandler)
+	http.HandleFunc("/ADVANCED", advancedHandler)
 	http.ListenAndServe(":8080", nil)
 
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	courses2 := gettingCourseFromCourses()
-	comments2 = 
-	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Courses: courses2, Comments: []string{}}
+
+	p := make([]guccomments, 0)
+	p = append(p, guccomments{Comments: "adasdas"})
+	p = append(p, guccomments{Comments: "adasdas"})
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, p)
 }
 
 func microHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Comments: []string{"asdasds", "asdasdas", "asdasd"}}
-	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, p)
-}
-func analysisHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Comments: []string{"asdasds", "asdasdas", "asdasd"}}
-	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, p)
-}
-func advancedHandler(w http.ResponseWriter, r *http.Request) {
-	p := guccomments{Title: "Guc Comments", Reviews: "Reviews", Comments: []string{"asdasds", "asdasdas", "asdasd"}}
-	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, p)
-}
-
-func gettingCommentsFromCourse(CourseName string) []string {
-	var comments []string
-	q := fmt.Sprintf(`SELECT Comment
+	if r.Method != "GET" {
+		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+	}
+	q := `SELECT Comment
 			 FROM Comments  
 			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId 
-			 WHERE Courses.CourseName = '%s' `, CourseName)
+			 WHERE Courses.CourseName = 'CSEN 702 Microprocessors' `
+	fmt.Println("7amada")
+	rows5555, err := db.Query(q)
+	fmt.Println("7amada")
+	if (err) != nil {
+		log.Fatal(err)
+	}
+	defer rows5555.Close()
+	gucs := make([]guccomments, 0)
+	for rows5555.Next() {
+		guc := guccomments{}
+		if err := rows5555.Scan(&guc.Comments); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(guc.Comments)
+		gucs = append(gucs, guc)
+
+	}
+
+	t, _ := template.ParseFiles("guc_comments.html")
+	t.Execute(w, gucs)
+}
+func analysisHandler(w http.ResponseWriter, r *http.Request) {
+	q := `SELECT Comment
+			 FROM Comments  
+			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId 
+			 WHERE Courses.CourseName = 'CSEN 703 Analysis and Design of Algorithms' `
 	rows, err := db.Query(q)
 
 	if (err) != nil {
 		log.Fatal(err)
 	}
-	i := 0
+	gucs := make([]guccomments, 0)
 	for rows.Next() {
-		var (
-			comment string
-		)
-		if err := rows.Scan(&comment); err != nil {
+		guc := guccomments{}
+		if err := rows.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
-		comments[i] = comment
-		i++
+		gucs = append(gucs, guc)
 
 	}
-	return comments
+
+	t, _ := template.ParseFiles("guc_comments.html")
+	t.Execute(w, gucs)
 }
-
-func gettingCourseFromCourses() []string {
-	var courses []string
-	q := fmt.Sprintf(`SELECT Course
-			 		FROM Courses `)
-
+func advancedHandler(w http.ResponseWriter, r *http.Request) {
+	q := `SELECT Comment
+			 FROM Comments  
+			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId 
+			 WHERE Courses.CourseName = 'CSEN 704 Advanced computer lab' `
 	rows, err := db.Query(q)
 
 	if (err) != nil {
 		log.Fatal(err)
 	}
-	i := 0
+	gucs := make([]guccomments, 0)
 	for rows.Next() {
-		var (
-			course string
-		)
-		if err := rows.Scan(&course); err != nil {
+		guc := guccomments{}
+		if err := rows.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
-		courses[i] = course
-		i++
+		gucs = append(gucs, guc)
 
 	}
-	return courses
+
+	t, _ := template.ParseFiles("guc_comments.html")
+	t.Execute(w, gucs)
 }
+
+// func gettingCommentsFromCourse(CourseName string) []string {
+// 	var comments []string
+// 	q := fmt.Sprintf(`SELECT Comment
+// 			 FROM Comments
+// 			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId
+// 			 WHERE Courses.CourseName = '%s' `, CourseName)
+// 	rows, err := db.Query(q)
+
+// 	if (err) != nil {
+// 		log.Fatal(err)
+// 	}
+// 	i := 0
+// 	for rows.Next() {
+// 		var (
+// 			comment string
+// 		)
+// 		if err := rows.Scan(&comment); err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		comments[i] = comment
+// 		i++
+
+// 	}
+// 	return comments
+// }
+
+// func gettingCourseFromCourses() []string {
+// 	var courses []string
+// 	q := fmt.Sprintf(`SELECT Course
+// 			 		FROM Courses `)
+
+// 	rows, err := db.Query(q)
+
+// 	if (err) != nil {
+// 		log.Fatal(err)
+// 	}
+// 	i := 0
+// 	for rows.Next() {
+// 		var (
+// 			course string
+// 		)
+// 		if err := rows.Scan(&course); err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		courses[i] = course
+// 		i++
+
+// 	}
+// 	return courses
+// }

@@ -1,13 +1,41 @@
 <html>
+        <head>
+                <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+                </style>
+                </head>
 <body>
-<h1> {{ .Title }}</h1>
+<h1> GUC Comments</h1>
 <select>
-  <option value="micro">Micro course</option>
-  <option value="analysis">Analysis course</option>
-  <option value="advanced">Advanced computer lab course</option>
+  <option value="micro">CSEN 702 Microprocessors </option>
+  <option value="analysis">CSEN 703 Analysis and Design of Algorithms </option>
+  <option value="advanced">CSEN 704 Advanced computer lab </option>
 </select>
-<table class="table">
+<table>
+    <tr>
         <th>Comments</th>
+    </tr>
+    {{range .}}
+    <tr>
+        <td>
+            {{.Comments}}
+        </td>
+    </tr>
+     {{end}}   
 </table>
 </body>
 </html>
