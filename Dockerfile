@@ -9,10 +9,13 @@ RUN go get -u github.com/kardianos/govendor
 # Copy app files into container
 WORKDIR /go/src/app
 COPY . .
-expose 3000
+
+EXPOSE 3000
+
 # Install dependencies
 RUN govendor sync
 # Build the app
 RUN govendor build -o /go/src/app/myapp
 # Run the app
+
 CMD [ "/go/src/app/myapp" ]
