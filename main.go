@@ -1,12 +1,15 @@
 package main
 
 import (
+	// 	"fmt"
+	// 	"net/http"
 	"database/sql"
 	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
 )
+
 
 // var (
 // 	dbname     = os.Getenv("DATABASE_NAME")
@@ -21,6 +24,7 @@ const (
 	dbuser     = "root"
 	dbhost     = "db"
 )
+
 
 func main() {
 	q := ` SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
@@ -53,6 +57,7 @@ func main() {
 
 	log.Print("connected")
 
+
 	Result, err := db.Exec(qcreate)
 	if (err) != nil {
 		log.Fatal(err)
@@ -81,17 +86,25 @@ func main() {
 		http.HandleFunc("/ANDVANCED", advancedHandler)
 		http.ListenAndServe(":3000", nil)*/
 
+	// fmt.Print("hiii sobky")
+	// http.HandleFunc("/", defaultHandler) // default directory
+	// http.HandleFunc("/MICRO", microHandler)
+	// http.HandleFunc("/ANALYSIS", analysisHandler)
+	// http.HandleFunc("/ANDVANCED", advancedHandler)
+	// http.ListenAndServe(":3000", nil)
+
+
 }
 
-/*func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, Web!")
-}
-func microHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, micro!")
-}
-func analysisHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, analysis!")
-}
-func advancedHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, advanced!")*/
-//}
+// func defaultHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, Web!")
+// }
+// func microHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, micro!")
+// }
+// func analysisHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, analysis!")
+// }
+// func advancedHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintln(w, "Hello, advanced!")
+// }
