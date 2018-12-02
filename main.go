@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"log"
+
 	//"os"
 	//"reflect"
 
@@ -12,13 +13,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var (
+// var (
 // 	dbname     = os.Getenv("DATABASE_NAME")
 // 	dbpassword = os.Getenv("DATABASE_PASSWORD")
 // 	dbuser     = os.Getenv("DATABASE_USER")
 // 	dbhost     = os.Getenv("DATABASE_HOST")
 //	ac = os.Getenv("ACCESS_TOKEN")
-)
+//)
 
 const (
 	dbname     = "GUC_Comments"

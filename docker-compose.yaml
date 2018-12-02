@@ -8,6 +8,7 @@ services:
         DATABASE_USER: root
         DATABASE_PASSWORD: secret
         DATABASE_NAME: GUC_Comments
+        ACCESS_TOKEN: "EAAFDrTDhvyMBAEt2GZAyMW9xPsLNnhz8ZAXh8ehZBTU6b5ug8ciAZBSulKOEDDbS2GtrokaGIKyOZAagiNCvRrZCl1nXaR6xtZBmGoXeSOISqihq7sDM3TZBj6hC2ZCEpwP3In3jo2ZAj5xlPNgMbYTgNWProADC3C2XNWe1FH7egJKwZDZD"
       ports: 
         - 3000:8080
       depends_on: 
