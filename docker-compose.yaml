@@ -4,7 +4,10 @@ services:
     app:
       build: .
       environment:
-       DATABASE_NAME: GUC_Comments
+        DATABASE_HOST: db
+        DATABASE_USER: root
+        DATABASE_PASSWORD: secret
+        DATABASE_NAME: GUC_Comments
       ports: 
         - 3000:8080
       depends_on: 

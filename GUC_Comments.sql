@@ -1,13 +1,13 @@
 CREATE TABLE Courses
 (
-    CourseId INT PRIMARY KEY, 
+    CourseId SERIAL PRIMARY KEY,
     CourseName VARCHAR(30)
     
 );
 
 CREATE TABLE Comments
 (
-    CourseId INT FOREIGN KEY REFERENCES Courses, 
+    CourseId INTEGER REFERENCES Courses(CourseId), 
     Comment VARCHAR(50)
    
 );
