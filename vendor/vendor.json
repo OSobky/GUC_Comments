@@ -1,0 +1,25 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "kg/6FgcsJN80HnXdtETt89cbBwc=",
+			"path": "github.com/huandu/facebook",
+			"revision": "e344d22ede2e56e440409a185063808dde25a649",
+			"revisionTime": "2018-09-09T15:40:21Z"
+		},
+		{
+			"checksumSHA1": "xxLSo5tKtXc7jGrR70yoEfza8Cw=",
+			"path": "github.com/lib/pq",
+			"revision": "9eb73efc1fcc404148b56765b0d3f61d9a5ef8ee",
+			"revisionTime": "2018-10-16T16:26:27Z"
+		},
+		{
+			"checksumSHA1": "ATnwV0POluBNQEMjPdylodz0oK0=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "9eb73efc1fcc404148b56765b0d3f61d9a5ef8ee",
+			"revisionTime": "2018-10-16T16:26:27Z"
+		}
+	],
+	"rootPath": "GUC_Comments"
+}
