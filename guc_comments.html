@@ -21,11 +21,9 @@
 <body>
   
     <h1> GUC Comments</h1>
-    {{range $i, $e := . }}
-    {{if eq $i  0}}
-    <h2>{{.Title}} </h2>
-    {{end}}
-    {{end}}
+   
+    <h2>{{.Course}} </h2>
+   
 
 <select onchange="rout(this.value)">
   <option>  </option>
@@ -43,7 +41,7 @@ function rout(src){
     <tr>
         <th>Comments</th>
     </tr>
-    {{range .}}
+    {{range .Guccommentss}}
     <tr>
         <td>
             {{.Comments}}

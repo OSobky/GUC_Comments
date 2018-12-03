@@ -18,7 +18,11 @@ import (
 
 type guccomments struct {
 	Comments string
-	Title    string
+}
+
+type guccommentspageData struct {
+	Course       string
+	Guccommentss []guccomments
 }
 
 var (
@@ -215,8 +219,12 @@ func main() {
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 	p := make([]guccomments, 0)
+	data := guccommentspageData{
+		Course:       "",
+		Guccommentss: p,
+	}
 	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, p)
+	t.Execute(w, data)
 }
 
 func microHandler(w http.ResponseWriter, r *http.Request) {
@@ -240,14 +248,18 @@ func microHandler(w http.ResponseWriter, r *http.Request) {
 		if err := rows5555.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
-		guc.Title = "CSEN 702 Microprocessors"
 		fmt.Println(guc.Comments)
 		gucs = append(gucs, guc)
 
 	}
 
+	data := guccommentspageData{
+		Course:       "CSEN 702 Microprocessors",
+		Guccommentss: gucs,
+	}
+
 	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, gucs)
+	t.Execute(w, data)
 }
 func analysisHandler(w http.ResponseWriter, r *http.Request) {
 	q := `SELECT Comment
@@ -265,13 +277,17 @@ func analysisHandler(w http.ResponseWriter, r *http.Request) {
 		if err := rows.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
-		guc.Title = "CSEN 703 Analysis and Design of Algorithms"
+
 		gucs = append(gucs, guc)
 
 	}
+	data := guccommentspageData{
+		Course:       "CSEN 703 Analysis and Design of Algorithms",
+		Guccommentss: gucs,
+	}
 
 	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, gucs)
+	t.Execute(w, data)
 }
 func advancedHandler(w http.ResponseWriter, r *http.Request) {
 	q := `SELECT Comment
@@ -289,13 +305,17 @@ func advancedHandler(w http.ResponseWriter, r *http.Request) {
 		if err := rows.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
-		guc.Title = "CSEN 704 Advanced computer lab"
+
 		gucs = append(gucs, guc)
 
 	}
+	data := guccommentspageData{
+		Course:       "CSEN 704 Advanced computer lab",
+		Guccommentss: gucs,
+	}
 
 	t, _ := template.ParseFiles("guc_comments.html")
-	t.Execute(w, gucs)
+	t.Execute(w, data)
 }
 
 // func gettingCommentsFromCourse(CourseName string) []string {
