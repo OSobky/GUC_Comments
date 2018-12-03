@@ -50,4 +50,4 @@ for example for:
 
 --the flags used in the docker compose command is : 
                                                 1.--build to build the container again
-                                                2.-p  Run container in background and print container ID
+                                                2.-d  Run container in background and print container ID
