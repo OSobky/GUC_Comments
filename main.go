@@ -6,20 +6,24 @@ import (
 
 	"log"
 
+
 	"net/http"
 	"os"
 
 	"html/template"
 	"reflect"
 
+
 	fb "github.com/huandu/facebook"
 	_ "github.com/lib/pq"
 )
+
 
 type guccomments struct {
 	Comments string
 	Title    string
 }
+
 
 var (
 	dbname     = os.Getenv("DATABASE_NAME")
@@ -27,6 +31,7 @@ var (
 	dbuser     = os.Getenv("DATABASE_USER")
 	dbhost     = os.Getenv("DATABASE_HOST")
 	ac         = os.Getenv("ACCESS_TOKEN")
+
 	db         *sql.DB
 	tpl        *template.Template
 )
@@ -69,6 +74,7 @@ func main() {
 
 				);`
 	qinsertCourses := `INSERT INTO Courses(CourseId ,CourseName ) VALUES
+
 						(DEFAULT,'CSEN 702 Microprocessors'),
 						(DEFAULT,'CSEN 703 Analysis and Design of Algorithms'),
 						(DEFAULT,'CSEN 704 Advanced computer lab');`
@@ -79,6 +85,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println(Result)
 
 	rows, err := db.Query(q)
@@ -135,6 +142,7 @@ func main() {
 		fmt.Println(qinsertcomment)
 	}
 
+
 	fmt.Println("")
 
 	res2, _ := fb.Get("582313518881669_582750698837951/comments", fb.Params{
@@ -163,6 +171,9 @@ func main() {
 	res3, _ := fb.Get("582313518881669_582751015504586/comments", fb.Params{
 		"fields":       "message",
 		"access_token": ac})
+
+
+	
 
 	v, _ := res3["data"].([]interface{})
 
