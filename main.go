@@ -109,7 +109,6 @@ func main() {
 		}
 		log.Printf("course name is %s and id is %d", courseName, courseid)
 	}
-	log.Printf("hey again")
 
 	res, err := fb.Get("582313518881669_582751342171220/comments", fb.Params{
 		"fields":       "message",
@@ -205,10 +204,7 @@ func main() {
 		gucs = append(gucs, guc)
 
 	}
-	fmt.Println("3ash ya sobkyy")
-
-	fmt.Print("hiii sobky")
-	http.HandleFunc("/", defaultHandler) // default directory
+	http.HandleFunc("/", defaultHandler)
 	http.HandleFunc("/MICRO", microHandler)
 	http.HandleFunc("/ANALYSIS", analysisHandler)
 	http.HandleFunc("/ADVANCED", advancedHandler)
@@ -317,54 +313,3 @@ func advancedHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, data)
 }
-
-// func gettingCommentsFromCourse(CourseName string) []string {
-// 	var comments []string
-// 	q := fmt.Sprintf(`SELECT Comment
-// 			 FROM Comments
-// 			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId
-// 			 WHERE Courses.CourseName = '%s' `, CourseName)
-// 	rows, err := db.Query(q)
-
-// 	if (err) != nil {
-// 		log.Fatal(err)
-// 	}
-// 	i := 0
-// 	for rows.Next() {
-// 		var (
-// 			comment string
-// 		)
-// 		if err := rows.Scan(&comment); err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		comments[i] = comment
-// 		i++
-
-// 	}
-// 	return comments
-// }
-
-// func gettingCourseFromCourses() []string {
-// 	var courses []string
-// 	q := fmt.Sprintf(`SELECT Course
-// 			 		FROM Courses `)
-
-// 	rows, err := db.Query(q)
-
-// 	if (err) != nil {
-// 		log.Fatal(err)
-// 	}
-// 	i := 0
-// 	for rows.Next() {
-// 		var (
-// 			course string
-// 		)
-// 		if err := rows.Scan(&course); err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		courses[i] = course
-// 		i++
-
-// 	}
-// 	return courses
-// }
