@@ -19,12 +19,27 @@
                 </style>
                 </head>
 <body>
-<h1> GUC Comments</h1>
-<select>
-  <option value="micro">CSEN 702 Microprocessors </option>
-  <option value="analysis">CSEN 703 Analysis and Design of Algorithms </option>
-  <option value="advanced">CSEN 704 Advanced computer lab </option>
+  
+    <h1> GUC Comments</h1>
+    {{range $i, $e := . }}
+    {{if eq $i  0}}
+    <h2>{{.Title}} </h2>
+    {{end}}
+    {{end}}
+
+<select onchange="rout(this.value)">
+  <option>  </option>
+  <option value="http://localhost:3000/MICRO">CSEN 702 Microprocessors </option>
+  <option value="http://localhost:3000/ANALYSIS">CSEN 703 Analysis and Design of Algorithms </option>
+  <option value="http://localhost:3000/ADVANCED">CSEN 704 Advanced computer lab </option>
 </select>
+
+<script>
+function rout(src){
+    window.location.href=src;
+}
+
+</script>
 <table>
     <tr>
         <th>Comments</th>

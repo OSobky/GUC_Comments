@@ -18,6 +18,7 @@ import (
 
 type guccomments struct {
 	Comments string
+	Title    string
 }
 
 var (
@@ -215,8 +216,6 @@ func main() {
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 	p := make([]guccomments, 0)
-	p = append(p, guccomments{Comments: "adasdas"})
-	p = append(p, guccomments{Comments: "adasdas"})
 	t, _ := template.ParseFiles("guc_comments.html")
 	t.Execute(w, p)
 }
@@ -229,9 +228,9 @@ func microHandler(w http.ResponseWriter, r *http.Request) {
 			 FROM Comments  
 			 INNER JOIN Courses ON  Courses.CourseId = Comments.CourseId 
 			 WHERE Courses.CourseName = 'CSEN 702 Microprocessors' `
-	fmt.Println("7amada")
+
 	rows5555, err := db.Query(q)
-	fmt.Println("7amada")
+
 	if (err) != nil {
 		log.Fatal(err)
 	}
@@ -242,6 +241,7 @@ func microHandler(w http.ResponseWriter, r *http.Request) {
 		if err := rows5555.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
+		guc.Title = "CSEN 702 Microprocessors"
 		fmt.Println(guc.Comments)
 		gucs = append(gucs, guc)
 
@@ -266,6 +266,7 @@ func analysisHandler(w http.ResponseWriter, r *http.Request) {
 		if err := rows.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
+		guc.Title = "CSEN 703 Analysis and Design of Algorithms"
 		gucs = append(gucs, guc)
 
 	}
@@ -289,6 +290,7 @@ func advancedHandler(w http.ResponseWriter, r *http.Request) {
 		if err := rows.Scan(&guc.Comments); err != nil {
 			log.Fatal(err)
 		}
+		guc.Title = "CSEN 704 Advanced computer lab"
 		gucs = append(gucs, guc)
 
 	}
