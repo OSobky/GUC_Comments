@@ -220,7 +220,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 	p := make([]guccomments, 0)
 	data := guccommentspageData{
-		Course:       "",
+		Course:       "  ",
 		Guccommentss: p,
 	}
 	t, _ := template.ParseFiles("guc_comments.html")
