@@ -5,10 +5,10 @@ services:
       build: .
       environment:
         DATABASE_HOST: db
-        DATABASE_USER: root
-        DATABASE_PASSWORD: secret
-        DATABASE_NAME: GUC_Comments
-        ACCESS_TOKEN: "EAAFDrTDhvyMBAEt2GZAyMW9xPsLNnhz8ZAXh8ehZBTU6b5ug8ciAZBSulKOEDDbS2GtrokaGIKyOZAagiNCvRrZCl1nXaR6xtZBmGoXeSOISqihq7sDM3TZBj6hC2ZCEpwP3In3jo2ZAj5xlPNgMbYTgNWProADC3C2XNWe1FH7egJKwZDZD"
+        DATABASE_USER: user
+        DATABASE_PASSWORD: password
+        DATABASE_NAME: name
+        ACCESS_TOKEN: (a valid access token)
       ports: 
         - 3000:8080
       depends_on: 
@@ -18,6 +18,6 @@ services:
       image: healthcheck/postgres:alpine
 
       environment: 
-        POSTGRES_PASSWORD: secret
-        POSTGRES_USER: root
-        POSTGRES_DB: GUC_Comments
+        POSTGRES_PASSWORD: password
+        POSTGRES_USER: user
+        POSTGRES_DB: name
